@@ -66,6 +66,15 @@ app.on('web-contents-created', (e, webContents) => {
       session.defaultSession.cookies.get({ url })
       .then((cookies) => {
         console.log(cookies)
+        let cookieString = "";
+        for(let i in cookies) {
+          let name = cookies[i]['name'];
+          let value = cookies[i]['value'];
+          cookieString += `${name}=${value}; `
+        }
+        Global.cookie = cookieString;
+        console.log(cookieString)
+        Global.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
       }).catch((error) => {
         console.log(error)
       })

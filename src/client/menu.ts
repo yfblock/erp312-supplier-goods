@@ -8,7 +8,7 @@ export function initMenu() {
       label: '设置',
       submenu: [
         {
-          click: () => Global.mainWindow.loadURL('https://www.erp321.com'),
+          click: () => Global.mainWindow.loadURL('https://www.erp321.com/login.aspx'),
           label: '登录',
         },
         {
