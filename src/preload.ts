@@ -4,5 +4,16 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('API', {
-  test1: () => ipcRenderer.invoke('test1')
+  request: (url: string, method = "GET", data = {}) => {
+    return ipcRenderer.invoke('request', [url, method, data]);
+  },
+  loadExcel: (url: string, supplier: string) => {
+    return ipcRenderer.invoke('loadExcel', [url, supplier]);
+  },
+  query: (sql: string) => {
+    return ipcRenderer.invoke('query', [sql]);
+  },
+  initDatabase: () => {
+    return ipcRenderer.invoke('initDatabase');
+  }
 })
