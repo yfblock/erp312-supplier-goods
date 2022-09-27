@@ -75,11 +75,17 @@ export async function downloadExcel(list: any[], callback: any) {
         let id = list[i]['co_id1'];
         let [__VIEWSTATE, __VIEWSTATEGENERATOR] = await getSignsOfSupplier();
 
-        let url = `https://www.erp321.com/app/drp/itemsku/LookItemSku.aspx?supplier_id=${id}&_t=1664080269094&_h=600px&_float=true&ts___=1664080967418&am___=LoadDataToJSON`;
+        let url = `https://www.erp321.com/app/drp/itemsku/LookItemSku.aspx?supplier_id=${id}&am___=LoadDataToJSON`;
         
+        const obj = {
+            k: 'sku_type',
+            v: 'normal',
+            c: '='
+        };
+
         const htmlResponse = await request(url, "POST", {
-            __VIEWSTATE: '/wEPDwUKLTE1MTQ4NDg2OGRkDA8bl4CLME9rszQagHP9QXQPfrA=',
-            __VIEWSTATEGENERATOR: 'D89AFAF8',
+            __VIEWSTATE: __VIEWSTATE,
+            __VIEWSTATEGENERATOR: __VIEWSTATEGENERATOR,
             sku_id: '',
             i_id: '',
             sku_code: '', 
@@ -88,16 +94,19 @@ export async function downloadExcel(list: any[], callback: any) {
             brand: '',
             qty1: '',
             qty2: '',
-            sku_type: '',
+            sku_type: 'normal',
             haslock: '',
             created: '',
             _jt_page_count_enabled: '',
             _jt_page_size: 500,
             _cbb_brand: '',
             __CALLBACKID: 'JTable1',
-            __CALLBACKPARAM: '{"Method":"SetSearchConditionToCache","Args":["[]"],"CallControl":"{page}"}'
+            __CALLBACKPARAM: JSON.stringify({
+                "Method": "SetSearchConditionToCache",
+                "Args": [`[${JSON.stringify(obj)}]`],
+                "CallControl": "{page}"
+            })
         });
-    
         let jsonData = JSON.parse(htmlResponse.substring(2));
     
         // window.open(`https://do.erp321.com/app/drp/itemsku/exportsupplieritemsku.aspx?drplevel=2&SupplierId=10937797&s=${jsonData['ReturnValue']}`);

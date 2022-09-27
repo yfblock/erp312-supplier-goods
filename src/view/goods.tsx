@@ -70,19 +70,21 @@ export default function () {
                 let name = value['name'] ?? '';
                 let code = value['code'] ?? '';
                 let number = value['number'] ?? 0;
+                name = name.replaceAll(' ', '%');
                 setCondition({
                     name,
                     code,
                     number
                 })
                 query(`select * from supplier where name like '%${name}%' and 
-                    code like '%${code}%' and number >  ${number} limit ${pagination.current}, 10`).then((value: any) => {
+                    code like '%${code}%' and number >  ${number} order by code limit ${(pagination.current - 1) * 10}, 10`).then((value: any) => {
                     setData(value)
                 })
                 query(`select count(*) as num from supplier where name like '%${name}%' and 
                     code like '%${code}%' and number >  ${number}`).then((value: any) => {
                     setPagination({
                         ...pagination,
+                        current: 1,
                         total: value[0]['num']
                     })
                 })
@@ -126,8 +128,9 @@ export default function () {
                     ...paginationConfig
                 })
                 setLoading(true);
+                
                 query(`select * from supplier where name like '%${condition.name}%' and 
-                    code like '%${condition.code}%' and number >  ${condition.number} limit ${pagination.current}, 10`).then((value: any) => {
+                    code like '%${condition.code}%' and number >  ${condition.number} order by code limit ${(paginationConfig.current - 1) * 10}, 10`).then((value: any) => {
                     setData(value)
                 }).then(()=>setLoading(false))
             })}
