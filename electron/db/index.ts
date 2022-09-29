@@ -54,10 +54,17 @@ export async function exportExcelToDb(data: any[], supplier: string) {
         if(basicPriceIndex == -1) {
             sql +=`('${row[1]}', '${row[3]}', '${row[2] ?? ''}', '${row[4]}', 0, '${row[5]}', '${supplier}')`;
         } else {
-            sql +=`('${row[1]}', '${row[3]}','${row[2] ?? ''}', '${row[4]}', ${row[8] ?? '""'}, '${row[5]}', '${supplier}')`;
+            if(supplier == "郑州盈晨文化传播有限公司") {
+                sql +=`('${row[1]}', "${row[3]}",'${row[2] ?? ''}', '${row[4]}', ${row[8] ?? '""'}, '${row[5]}', '${supplier}')`;
+            } else {
+                sql +=`('${row[1]}', '${row[3]}','${row[2] ?? ''}', '${row[4]}', ${row[8] ?? '""'}, '${row[5]}', '${supplier}')`;
+            }
         }
 
         inserted = true;
     }
-    return await execute(sql)
+    return await execute(sql).then((value) => {
+        console.log(value);
+        return value;
+    })
 }

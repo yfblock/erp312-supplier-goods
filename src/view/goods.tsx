@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, InputNumber, Row } from "antd";
 import Table, { ColumnsType } from "antd/lib/table";
 import React, { useEffect, useState } from "react";
-import { query } from "./ipc";
+import { initDatabase, query } from "./ipc";
 
 const columns: ColumnsType = [
     {
@@ -63,6 +63,24 @@ export default function () {
         })
     }, [])
 
+
+    const updateTable = async (condition: any, pagination: any) => {
+        const {
+            name,
+            code,
+            number
+        } = condition;
+        let data = await query(`select * from supplier where name like '%${name}%' and 
+            code like '%${code}%' and number >  ${number} order by code, base_price asc limit ${(pagination.current - 1) * pagination.pageSize}, ${pagination.pageSize}`);
+        setData(data);
+        let value = await query(`select count(*) as num from supplier where name like '%${name}%' and 
+            code like '%${code}%' and number >  ${number}`)
+        setPagination({
+            ...pagination,
+            total: value[0]['num']
+        })
+    }
+
     return <div>
         <Form
             form={form}
@@ -71,22 +89,15 @@ export default function () {
                 let code = value['code'] ?? '';
                 let number = value['number'] ?? 0;
                 name = name.replaceAll(' ', '%');
-                setCondition({
+                const condition = {
                     name,
                     code,
                     number
-                })
-                query(`select * from supplier where name like '%${name}%' and 
-                    code like '%${code}%' and number >  ${number} order by code limit ${(pagination.current - 1) * 10}, 10`).then((value: any) => {
-                    setData(value)
-                })
-                query(`select count(*) as num from supplier where name like '%${name}%' and 
-                    code like '%${code}%' and number >  ${number}`).then((value: any) => {
-                    setPagination({
-                        ...pagination,
-                        current: 1,
-                        total: value[0]['num']
-                    })
+                };
+                setCondition(condition);
+                updateTable(condition, {
+                    ...pagination,
+                    current: 1
                 })
             }}
         >
@@ -106,9 +117,14 @@ export default function () {
                         <InputNumber defaultValue={0} min={0} placeholder="库存数量" />
                     </Form.Item>
                 </Col>
-                <Col span={4}>
+                <Col>
                     <Button type="primary" htmlType="submit">
                         搜索
+                    </Button>
+                </Col>
+                <Col>
+                    <Button danger onClick={() => initDatabase().then(() => setData([]))}>
+                        清空数据
                     </Button>
                 </Col>
             </Row>
@@ -119,23 +135,16 @@ export default function () {
             dataSource={data}
             pagination={{
                 ...pagination,
-                showSizeChanger: false
+                pageSizeOptions: [10, 20, 50, 200, 500]
             }}
             onChange = {((paginationConfig) => {
-                // 搜索信息
-                setPagination({
+                setLoading(true);
+                updateTable(condition, {
                     ...pagination,
                     ...paginationConfig
-                })
-                setLoading(true);
-                
-                query(`select * from supplier where name like '%${condition.name}%' and 
-                    code like '%${condition.code}%' and number >  ${condition.number} order by code limit ${(paginationConfig.current - 1) * 10}, 10`).then((value: any) => {
-                    setData(value)
                 }).then(()=>setLoading(false))
             })}
             loading={loading}
-            // onChange={handleTableChange}
         />
     </div>;
 }
