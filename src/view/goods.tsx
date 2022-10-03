@@ -7,10 +7,16 @@ const columns: ColumnsType = [
     {
       title: '商品编码',
       dataIndex: 'code',
+      sorter: (a: any, b: any) => {
+        return a.code > b.code ? 1 : -1;
+      },
     },
     {
         title: '商品名称',
         dataIndex: 'name',
+        sorter: (a: any, b: any) => {
+            return a.name > b.name ? 1 : -1;
+        },
     },
     {
         title: '商品类型',
@@ -19,10 +25,16 @@ const columns: ColumnsType = [
     {
         title: '分销价格',
         dataIndex: 's_price',
+        sorter: (a: any, b: any) => {
+            return a.s_price > b.s_price ? 1 : -1;
+        },
     },
     {
         title: '基本价格',
         dataIndex: 'base_price',
+        sorter: (a: any, b: any) => {
+            return a.base_price > b.base_price ? 1 : -1;
+        },
     },
     {
         title: '库存',
