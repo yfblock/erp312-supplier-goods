@@ -82,11 +82,23 @@ export default function () {
             code,
             number
         } = condition;
-        let data = await query(`select * from supplier where name like '%${name}%' and 
-            code like '%${code}%' and number >  ${number} order by code, base_price asc limit ${(pagination.current - 1) * pagination.pageSize}, ${pagination.pageSize}`);
+
+        let whereCondition = ``;
+
+        let nameArr = name.split('%').filter((v: any) => v.trim() != "");
+        if(nameArr.length > 0) {
+            whereCondition += '(';
+
+            whereCondition += 
+                nameArr.map((value: any) => `name like '%${value}%'`).join('and ');
+            whereCondition += ') and ';
+        }
+
+        whereCondition += `code like '%${code}%' and number >  ${number}`;
+
+        let data = await query(`select * from supplier where ${whereCondition} order by code, base_price asc limit ${(pagination.current - 1) * pagination.pageSize}, ${pagination.pageSize}`);
         setData(data);
-        let value = await query(`select count(*) as num from supplier where name like '%${name}%' and 
-            code like '%${code}%' and number >  ${number}`)
+        let value = await query(`select count(*) as num from supplier where ${whereCondition}`)
         setPagination({
             ...pagination,
             total: value[0]['num']
