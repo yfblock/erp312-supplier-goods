@@ -63,7 +63,7 @@ app.on('web-contents-created', (e, webContents) => {
     console.log(url);
     // 获取登录参数
     // if(url.indexOf("https://www.erp321.com/") && !url.indexOf("https://ww.erp321.com/login.aspx")) {
-    if(url.indexOf("erp321.com/") > 0 && url.indexOf("/login.aspx") == -1)
+    if(url.indexOf("erp321.com/") > 0 && url.indexOf("/login.aspx") == -1) {
       session.defaultSession.cookies.get({ url })
       .then((cookies) => {
         console.log(cookies)

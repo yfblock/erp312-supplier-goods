@@ -10,8 +10,40 @@ export async function getSuppliers() {
 
     let result = (new DOMParser()).parseFromString(htmlResponse, 'text/html');
 
-    let jsonData = result.querySelector('#_jt_data').innerHTML;
-    return JSON.parse(jsonData);
+    // let jsonData = result.querySelector('#_jt_data').innerHTML;
+    // return JSON.parse(jsonData);
+
+    /*
+ {
+    name: 'u_co_name',
+    value: '%e9%83%91%e5%b7%9e%e9%9a%86%e7%9d%bf%e5%9b%be%e4%b9%a6%e6%9c%89%e9%99%90%e5%85%ac%e5%8f%b8',
+    domain: '.erp321.com',
+    hostOnly: false,
+    path: '/',
+    secure: false,
+    httpOnly: false,
+    session: false,
+    expirationDate: 1668334886.836337,
+    sameSite: 'unspecified'
+  },
+    */
+
+    let __VIEWSTATEGENERATOR = result.querySelector('#__VIEWSTATEGENERATOR').getAttribute('value');
+    let __VIEWSTATE = result.querySelector('#__VIEWSTATE').getAttribute('value');
+
+    const newHtmlResponse = await request(" https://www.erp321.com/app/drp/partner/SupplierList.aspx?am___=LoadDataToJSON", "POST", {
+        __VIEWSTATE: __VIEWSTATE,
+        __VIEWSTATEGENERATOR: __VIEWSTATEGENERATOR,
+        co_id1: '',
+        supplier_name: '',
+        remark2: '',
+        status: '',
+        _jt_page_count_enabled: '',
+        _jt_page_size: 200,
+        __CALLBACKID: 'JTable1',
+        __CALLBACKPARAM: '{"Method":"LoadDataToJSON","Args":["1","[]","{}"]}'
+    });
+    return JSON.parse(JSON.parse(newHtmlResponse.substring(2))['ReturnValue']);
 }
 
 export async function clearDatabase() {
