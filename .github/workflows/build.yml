@@ -3,6 +3,8 @@ name: Build Electron
 on:
   workflow_dispatch:
 
+permissions: read-all|write-all
+
 jobs:
   prebuild-node:
     name: Upload Node Prebuild
