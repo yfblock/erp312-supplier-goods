@@ -1,14 +1,15 @@
 import axios from "axios";
 import { ipcMain } from "electron";
-import { initDatabase, query } from "../db";
+import { initDatabase, query, execute } from "../db";
 import qs from "qs";
 import { Global } from "../global";
 import { downloadFile } from '../requests';
+import { checkAuth } from '../auth';
 
 axios.interceptors.request.use(config => {
-    config.headers['cookie'] = Global.cookie;
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
-    config.data = qs.stringify(config.data);
+    config.headers['authorization'] = Global.cookie;
+    // config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+    // config.data = qs.stringify(config.data);
     return config;
 })
 
@@ -36,6 +37,14 @@ ipcMain.handle('query', async (e, args) => {
     return await query(args[0]);
 })
 
+ipcMain.handle('execute', async (e, args) => {
+    return await execute(args[0]);
+});
+
 ipcMain.handle('initDatabase', async (e, args) => {
     return await initDatabase();
+})
+
+ipcMain.handle('sendPassword', async (e, args) => {
+    return checkAuth(args[0]);
 })

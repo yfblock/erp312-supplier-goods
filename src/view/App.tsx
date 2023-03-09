@@ -7,9 +7,18 @@ import {
     Routes,
     Route
 } from 'react-router-dom';
-import { dbQuery, downloadExcel, getGoodsOfSupplier, getSuppliers, lookItemSku } from './request';
+import { dbQuery, getSuppliers } from './request';
 import Supplier from './supplier';
 import Goods from './goods';
+import SupplierFranking from './SupplierFranking';
+import Input from './input';
+
+
+declare const window: Window & { 
+    ipcRenderer: any,
+};
+
+export {};
 
 const container = document.getElementById('app');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
@@ -25,14 +34,6 @@ const TestPage = () => {
             console.log(value);
         }}>测试同步</button>
         <button onClick={async (e) => {
-            let value = await getGoodsOfSupplier();
-            console.log(value);
-        }}>测试搜索货物</button>
-        <button onClick={async (e) => {
-            let value = await lookItemSku();
-            console.log(value);
-        }}>测试导出excel</button>
-        <button onClick={async (e) => {
             // let value = await downloadExcel();
             // console.log(value);
         }}>下载excel</button>
@@ -45,6 +46,9 @@ const TestPage = () => {
         <button onClick={async (e) => {
             location.href = location.pathname + "#/supplier";
         }}>跳转到供应商界面</button>
+        <button onClick={async (e) => {
+            console.log(window.ipcRenderer);
+        }}>测试 ipc</button>
     </>
 }
 
@@ -53,6 +57,9 @@ root.render(<div>
         <Routes>
             <Route path='/' element={<Goods />} />
             <Route path='/supplier' element={<Supplier />} />
+            <Route path='/franking' element={<SupplierFranking />} />
+            <Route path='/input' element={<Input />} />
+            {/* <Route path='/test' element={<TestPage />} /> */}
         </Routes>
     </HashRouter>
 </div>);

@@ -18,10 +18,10 @@ const columns: ColumnsType = [
             return a.name > b.name ? 1 : -1;
         },
     },
-    {
-        title: '商品类型',
-        dataIndex: 'type',
-    },
+    // {
+    //     title: '商品类型',
+    //     dataIndex: 'type',
+    // },
     {
         title: '分销价格',
         dataIndex: 's_price',
@@ -29,11 +29,18 @@ const columns: ColumnsType = [
             return a.s_price > b.s_price ? 1 : -1;
         },
     },
+    // {
+    //     title: '基本价格',
+    //     dataIndex: 'base_price',
+    //     sorter: (a: any, b: any) => {
+    //         return a.base_price > b.base_price ? 1 : -1;
+    //     },
+    // },
     {
-        title: '基本价格',
-        dataIndex: 'base_price',
+        title: '成本',
+        dataIndex: 'franking',
         sorter: (a: any, b: any) => {
-            return a.base_price > b.base_price ? 1 : -1;
+            return a.franking > b.franking ? 1 : -1;
         },
     },
     {
@@ -64,7 +71,7 @@ export default function () {
     });
 
     useEffect(() => {
-        query('select * from supplier limit 10').then((value: any) => {
+        query('select supplier.*, (supplier.s_price + coalesce(franking.franking, 0)) as franking from supplier left join franking on supplier.supplier = franking.name limit 10').then((value: any) => {
             setData(value)
         })
         query(`select count(*) as num from supplier`).then((value: any) => {
@@ -96,7 +103,7 @@ export default function () {
 
         whereCondition += `code like '%${code}%' and number >  ${number}`;
 
-        let data = await query(`select * from supplier where ${whereCondition} order by code, base_price asc limit ${(pagination.current - 1) * pagination.pageSize}, ${pagination.pageSize}`);
+        let data = await query(`select supplier.*, (supplier.s_price + coalesce(franking.franking, 0)) as franking from supplier left join franking on supplier.supplier = franking.name where ${whereCondition} order by code, base_price asc limit ${(pagination.current - 1) * pagination.pageSize}, ${pagination.pageSize}`);
         setData(data);
         let value = await query(`select count(*) as num from supplier where ${whereCondition}`)
         setPagination({

@@ -1,17 +1,18 @@
-import sqlite3 from "sqlite3";
+import sqlite3 from "better-sqlite3";
 
-const db = new sqlite3.Database('data.sqlite');
+const db = new sqlite3('data.sqlite');
 
 export async function deleteDatabase() {
     return new Promise((resolve, reject) => {
-        db.all(`DROP TABLE 'supplier'`, (v) => resolve(v));
+        let v = db.exec(`DROP TABLE 'supplier'`);
+        resolve(v);
     })
 }
 
 export async function initDatabase() {
     await deleteDatabase();
     return new Promise((resolve, reject) => {
-        db.all(`CREATE TABLE IF NOT EXISTS 'supplier' (
+        let v = db.exec(`CREATE TABLE IF NOT EXISTS 'supplier' (
             'id' INTEGER PRIMARY KEY AUTOINCREMENT,
             'name' TEXT,
             'code' TEXT,
@@ -20,24 +21,41 @@ export async function initDatabase() {
             'base_price' NUMBER,
             'number' NUMBER,
             'supplier' TEXT
-        )`, (v) => resolve(v));
+        )`);
+        resolve(v);
+        // db.all(`CREATE TABLE IF NOT EXISTS 'supplier' (
+        //     'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        //     'name' TEXT,
+        //     'code' TEXT,
+        //     'type' TEXT,
+        //     's_price' NUMBER,
+        //     'base_price' NUMBER,
+        //     'number' NUMBER,
+        //     'supplier' TEXT
+        // )`, (v) => resolve(v));
     })
 }
 
 export async function query(sql: string) {
     console.log(sql)
     return new Promise((resolve, reject) => {
-        db.all(sql, (e: any, rows) => e ? reject(e) : resolve(rows))
+        let res = db.prepare(sql).all();
+        resolve(res);
+        // db.all(sql, (e: any, rows) => e ? reject(e) : resolve(rows))
     })
 }
 
 export async function execute(sql: string) {
     return new Promise((resolve, reject) => {
-        db.exec(sql, (value: any) => resolve(value))
+        let v = db.exec(sql);
+        resolve(v);
+        // db.exec(sql, (value: any) => resolve(value))
     })
 }
 
 export async function exportExcelToDb(data: any[], supplier: string) {
+    console.log(data[0]);
+    console.log(supplier);
     let inserted = false;
     let basicPriceIndex = -1;
     for(let i = 0; i < data[0].length; i++) {
@@ -63,7 +81,14 @@ export async function exportExcelToDb(data: any[], supplier: string) {
 
         inserted = true;
     }
+
+    if (!inserted) return null;
+
+    // console.log(sql);
     return await execute(sql).then((value) => {
+        if(value != null) {
+            console.log(sql);
+        }
         console.log(value);
         return value;
     })

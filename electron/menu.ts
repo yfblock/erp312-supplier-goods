@@ -10,7 +10,7 @@ export function initMenu() {
       label: '设置',
       submenu: [
         {
-          click: () => Global.mainWindow.loadURL('https://www.erp321.com/login.aspx'),
+          click: () => Global.mainWindow.loadURL('https://account.scm121.com/user/login'),
           label: '登录',
         },
         {
@@ -34,10 +34,14 @@ export function initMenu() {
           click: () => Global.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + '#/supplier'),
           label: '供应商',
         },
-        {
-          click: () => Global.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + '#/test'),
-          label: '其他页',
-        },
+        // {
+        //   click: () => Global.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + '#/franking'),
+        //   label: '运费设置',
+        // },
+        // {
+        //   click: () => Global.mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY + '#/test'),
+        //   label: '其他页',
+        // },
       ]
     }
   ])
