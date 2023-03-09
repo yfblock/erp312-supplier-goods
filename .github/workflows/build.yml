@@ -2,10 +2,6 @@ name: Build Electron
 
 on:
   workflow_dispatch:
-    inputs:
-      package_version:
-        description: 'Package version to be published to NPM'
-        required: true
 
 jobs:
   prebuild-node:
