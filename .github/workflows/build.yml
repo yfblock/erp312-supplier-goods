@@ -22,6 +22,9 @@ jobs:
       - run: npm install && (npm list || true)
       - name: Build release
         run: |
+          cd node_modules\@mapbox\node-pre-gyp
+          npm install
+          cd ../../..
           npm run package
       - uses: vimtor/action-zip@v1
         with:
