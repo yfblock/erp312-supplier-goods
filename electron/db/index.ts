@@ -1,6 +1,6 @@
-import sqlite from 'better-sqlite3';
-
-const db = sqlite('data.sqlite');
+// import sqlite from 'better-sqlite3';
+import sqlite from 'sqlite3';
+const db = new sqlite.Database('data.sqlite');
 
 export async function deleteDatabase() {
     // return new Promise((resolve, reject) => {
@@ -50,17 +50,17 @@ export async function initDatabase() {
 export async function query(sql: string) {
     console.log(sql)
     return new Promise((resolve, reject) => {
-        let res = db.prepare(sql).all();
-        resolve(res);
-        // db.all(sql, (e: any, rows) => e ? reject(e) : resolve(rows))
+        // let res = db.prepare(sql).all();
+        // resolve(res);
+        db.all(sql, (e: any, rows) => e ? reject(e) : resolve(rows))
     })
 }
 
 export async function execute(sql: string) {
     return new Promise((resolve, reject) => {
-        let v = db.exec(sql);
-        resolve(v);
-        // db.exec(sql, (value: any) => resolve(value))
+        // let v = db.exec(sql);
+        // resolve(v);
+        db.exec(sql, (value: any) => resolve(value))
     })
 }
 
