@@ -27,6 +27,16 @@ jobs:
       - name: Build release
         run: |
           npm run package
+      - uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r win32.zip out/my-new-app-win32-x64
       - name: show files
         run: |
           ls out
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: win32.zip
+          asset_name: win32
+          tag: build
