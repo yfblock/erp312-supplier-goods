@@ -97,7 +97,7 @@ export default function () {
             whereCondition += '(';
 
             whereCondition += 
-                nameArr.map((value: any) => `name like '%${value}%'`).join('and ');
+                nameArr.map((value: any) => `supplier.name like '%${value}%'`).join('and ');
             whereCondition += ') and ';
         }
 
