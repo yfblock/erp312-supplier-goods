@@ -16,9 +16,7 @@ jobs:
         # using older ubuntu to mitigate "/lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.29' not found" error
         os: [windows-2019,]
     steps:
-      - uses: actions/checkout@v2
-        with:
-          repository: "JoshuaWise/better-sqlite3"
+      - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
