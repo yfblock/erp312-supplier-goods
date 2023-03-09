@@ -1,23 +1,34 @@
-name: Build/release
+name: Build Electron
 
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: 'Package version to be published to NPM'
+        required: true
 
 jobs:
-  release:
+  prebuild-node:
+    name: Upload Node Prebuild
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
-        os: [windows-latest]
-
+        # using older ubuntu to mitigate "/lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.29' not found" error
+        os: [windows-2019,]
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v1
-
-      - name: Install Node.js, NPM and Yarn
+      - uses: actions/checkout@v2
+        with:
+          repository: "JoshuaWise/better-sqlite3"
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: 16
-
-      - name: Electron Forge Action
-        uses: yinxulai/actions-electron-forge@0.05
+      - run: npm install && (npm list || true)
+      - name: Show package.json
+        run: cat package.json
+      - name: Build release
+        run: |
+          npm run package
+      - name: show files
+        run: |
+          ls out

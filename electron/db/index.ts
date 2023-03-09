@@ -1,39 +1,50 @@
-import sqlite3 from "better-sqlite3";
+import sqlite from 'better-sqlite3';
 
-const db = new sqlite3('data.sqlite');
+const db = sqlite('data.sqlite');
 
 export async function deleteDatabase() {
-    return new Promise((resolve, reject) => {
-        let v = db.exec(`DROP TABLE 'supplier'`);
-        resolve(v);
-    })
+    // return new Promise((resolve, reject) => {
+    //     let v = db.exec(`DROP TABLE 'supplier'`);
+    //     resolve(v);
+    // })
+    return await execute(`DROP TABLE 'supplier'`);
 }
 
 export async function initDatabase() {
     await deleteDatabase();
-    return new Promise((resolve, reject) => {
-        let v = db.exec(`CREATE TABLE IF NOT EXISTS 'supplier' (
-            'id' INTEGER PRIMARY KEY AUTOINCREMENT,
-            'name' TEXT,
-            'code' TEXT,
-            'type' TEXT,
-            's_price' NUMBER,
-            'base_price' NUMBER,
-            'number' NUMBER,
-            'supplier' TEXT
-        )`);
-        resolve(v);
-        // db.all(`CREATE TABLE IF NOT EXISTS 'supplier' (
-        //     'id' INTEGER PRIMARY KEY AUTOINCREMENT,
-        //     'name' TEXT,
-        //     'code' TEXT,
-        //     'type' TEXT,
-        //     's_price' NUMBER,
-        //     'base_price' NUMBER,
-        //     'number' NUMBER,
-        //     'supplier' TEXT
-        // )`, (v) => resolve(v));
-    })
+    return await execute(`CREATE TABLE IF NOT EXISTS 'supplier' (
+        'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'name' TEXT,
+        'code' TEXT,
+        'type' TEXT,
+        's_price' NUMBER,
+        'base_price' NUMBER,
+        'number' NUMBER,
+        'supplier' TEXT
+    )`);
+    // return new Promise((resolve, reject) => {
+    //     let v = db.exec(`CREATE TABLE IF NOT EXISTS 'supplier' (
+    //         'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+    //         'name' TEXT,
+    //         'code' TEXT,
+    //         'type' TEXT,
+    //         's_price' NUMBER,
+    //         'base_price' NUMBER,
+    //         'number' NUMBER,
+    //         'supplier' TEXT
+    //     )`);
+    //     resolve(v);
+    //     // db.all(`CREATE TABLE IF NOT EXISTS 'supplier' (
+    //     //     'id' INTEGER PRIMARY KEY AUTOINCREMENT,
+    //     //     'name' TEXT,
+    //     //     'code' TEXT,
+    //     //     'type' TEXT,
+    //     //     's_price' NUMBER,
+    //     //     'base_price' NUMBER,
+    //     //     'number' NUMBER,
+    //     //     'supplier' TEXT
+    //     // )`, (v) => resolve(v));
+    // })
 }
 
 export async function query(sql: string) {
