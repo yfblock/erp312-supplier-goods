@@ -2,9 +2,9 @@ name: Build Electron
 
 on:
   workflow_dispatch:
-
-permissions: read-all|write-all
-
+  push:
+    branches:
+      - master
 jobs:
   prebuild-node:
     name: Upload Node Prebuild
