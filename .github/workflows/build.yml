@@ -22,14 +22,13 @@ jobs:
         with:
           node-version: 16
       - run: npm install && (npm list || true)
-      - name: Show package.json
-        run: cat package.json
       - name: Build release
         run: |
           npm run package
-      - uses: montudor/action-zip@v1
+      - uses: vimtor/action-zip@v1
         with:
-          args: zip -qq -r win32.zip out/my-new-app-win32-x64
+          files: out/my-new-app-win32-x64
+          dest: win32.zip
       - name: show files
         run: |
           ls out
