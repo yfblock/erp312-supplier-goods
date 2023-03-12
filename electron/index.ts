@@ -86,7 +86,7 @@ app.on('web-contents-created', (e, webContents) => {
     console.log(url);
     // 获取登录参数
     // if(url.indexOf("https://www.erp321.com/") && !url.indexOf("https://ww.erp321.com/login.aspx")) {
-    if(url.indexOf("gyl.scm121.com/") > 0 && url.indexOf("/user/login") == -1) {
+    if((url.indexOf("scm121.com/") > 0) && url.indexOf("/user/login") == -1) {
       session.defaultSession.cookies.get({ url })
       .then((cookies) => {
         let cookie = cookies.find((cookie) => cookie.name == "DISTRYBUTION_TOKEN");

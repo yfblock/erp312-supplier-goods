@@ -38,5 +38,5 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: win32.zip
-          asset_name: win32
-          tag: build
+          asset_name: win32.zip
+          # tag: build
